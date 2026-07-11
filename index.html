@@ -1,0 +1,126 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE FOURIER DYAD — time ⟺ frequency, one object</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--paper:#f4ead6;--paper2:#ece0c4;--ink:#2c2118;--ink2:#5c4a34;--faint:#9a865f;--line:#d8c39a;
+    --gold:#b8912f;--gold2:#d8b24a;--carbon:#c1502a;--silicon:#2f6e9e;--green:#3f7d52;--amber:#a9781f;--red:#a83a28;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;--mono:ui-monospace,"DejaVu Sans Mono",Menlo,Consolas,monospace;}
+  html,body{background:var(--paper);color:var(--ink);font-family:var(--serif);line-height:1.6}
+  body{background-image:radial-gradient(circle at 50% 0%,#f9f0de,var(--paper) 62%,var(--paper2));min-height:100vh}
+  .wrap{max-width:760px;margin:0 auto;padding:26px 18px 60px}
+  .kick{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);text-align:center}
+  h1{font-size:clamp(26px,6vw,44px);font-weight:800;letter-spacing:.5px;text-align:center;margin-top:6px;color:var(--ink)}
+  .lede{text-align:center;font-size:14.5px;color:var(--ink2);max-width:64ch;margin:10px auto 0}.lede b{color:var(--ink)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0 6px}@media(max-width:640px){.two{grid-template-columns:1fr}}
+  .face{background:#fbf4e4;border:1px solid var(--line);border-radius:11px;padding:12px}
+  .face h3{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;text-align:center;margin-bottom:8px}
+  .face.t h3{color:var(--carbon)}.face.f h3{color:var(--silicon)}
+  canvas{display:block;width:100%;height:160px;border-radius:6px;background:#fffdf6;cursor:crosshair}
+  .face.f canvas{cursor:default}
+  .seam{text-align:center;font-family:var(--mono);color:var(--gold);font-size:20px;margin:2px 0}
+  .presets{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:8px 0}
+  .presets button{font-family:var(--mono);font-size:11px;background:#f2e9d3;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;color:var(--ink2)}
+  .presets button:hover{border-color:var(--gold)}
+  .read{max-width:560px;margin:12px auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;font-family:var(--mono)}
+  .read .m{background:#fbf4e4;border:1px solid var(--line);border-radius:7px;padding:8px 4px}
+  .read .m .v{font-size:14px;font-weight:800;color:var(--green)}
+  .read .m .l{font-size:8px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+  .hint{text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--faint);margin-top:4px}
+  h2{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin:24px 0 8px;text-align:center}
+  p.b{font-size:14.5px;margin:8px auto;max-width:62ch}p.b b{color:var(--ink)}
+  .tiers{margin:20px auto;max-width:64ch}
+  .t{border-left:3px solid;padding:8px 0 8px 14px;margin:10px 0;font-size:13px;line-height:1.6}
+  .t.g{border-color:var(--green)}.t.g b{color:var(--green)}.t.a{border-color:var(--amber)}.t.a b{color:var(--amber)}.t.r{border-color:var(--red)}.t.r b{color:var(--red)}
+  .t .lab2{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  .foot{text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink2);margin-top:26px;border-top:1px solid var(--line);padding-top:14px;line-height:1.8}.foot .g{color:var(--gold)}
+</style></head>
+<body><div class="wrap">
+  <div class="kick">dyas · a MEASURED duality · not a metaphor</div>
+  <h1>THE FOURIER DYAD</h1>
+  <p class="lede">A signal has <b>two faces of one object</b>: its shape in <b>time</b>, and its content in <b>frequency</b>. Neither is more real; each is the other, fully — and you can pass between them and back with <b>nothing lost</b>. Draw in the time panel; the frequency panel is its exact dual, recomputed live. This is duality you can measure.</p>
+
+  <div class="presets">
+    <button data-p="impulse">impulse</button>
+    <button data-p="sine">sine</button>
+    <button data-p="two">two tones</button>
+    <button data-p="square">square</button>
+    <button data-p="noise">noise</button>
+  </div>
+  <div class="two">
+    <div class="face t"><h3>◧ time — x[n] (draw here)</h3><canvas id="time" width="360" height="160"></canvas></div>
+    <div class="face f"><h3>frequency — |X[k]| ◨</h3><canvas id="freq" width="360" height="160"></canvas></div>
+  </div>
+  <div class="seam">⟺</div>
+  <div class="read">
+    <div class="m"><div class="v" id="rt">—</div><div class="l">round-trip error<br>idft(dft(x)) vs x</div></div>
+    <div class="m"><div class="v" id="pa">—</div><div class="l">Parseval<br>energy conserved</div></div>
+    <div class="m"><div class="v" id="nn">N=64</div><div class="l">samples<br>(both faces)</div></div>
+  </div>
+  <div class="hint">drag in the time panel to reshape x[n] · the spectrum and both invariants update live</div>
+
+  <h2>two faces, nothing lost</h2>
+  <p class="b">The discrete Fourier transform is an <b>exact, invertible</b> map: <b>idft(dft(x)) = x</b> to machine precision, so no information is created or destroyed crossing the seam — time and frequency are one object seen two ways. And <b>Parseval</b>: the energy Σ|x|² equals (1/N)Σ|X|², conserved exactly. That is what makes this a true DYAD and not a mere comparison — the two sides are provably the same thing.</p>
+
+  <div class="tiers">
+    <div class="t g"><span class="lab2">green · measured live</span><br>The DFT/IDFT run in your browser on the signal you draw. <b>Round-trip error ~1e−15</b> (machine epsilon) and <b>Parseval conserved to ~1e−9</b> — displayed live, node-verified before shipping. The invertibility is not asserted; it is computed in front of you.</div>
+    <div class="t a"><span class="lab2">amber · the framing</span><br>Calling time and frequency "the two faces of one object" is the honest reading of an exact theorem, but "faces" is still a chosen word. The magnitude spectrum shown discards phase (kept internally for the round-trip) — the picture is |X[k]|, not all of X[k].</div>
+    <div class="t r"><span class="lab2">red · scope</span><br>This is a finite DFT (N=64), not the continuous Fourier transform; edge effects and sampling are real. It is a clean instance of duality, not a claim that every duality is invertible — most are not. Here, this one provably is.</div>
+  </div>
+
+  <div class="foot"><span class="g">DYAS · the Fourier Dyad</span> · idft(dft(x)) = x, exact · David Lee Wise / ROOT0, with AVAN · CC-BY-ND-4.0</div>
+</div>
+<script>
+"use strict";
+(function(){
+  var N=64, x=new Array(N).fill(0);
+  function dft(re){var X=[];for(var k=0;k<N;k++){var a=0,b=0;for(var n=0;n<N;n++){var t=-2*Math.PI*k*n/N;a+=re[n]*Math.cos(t);b+=re[n]*Math.sin(t);}X.push([a,b]);}return X;}
+  function idft(X){var r=[];for(var n=0;n<N;n++){var a=0;for(var k=0;k<N;k++){var t=2*Math.PI*k*n/N;a+=X[k][0]*Math.cos(t)-X[k][1]*Math.sin(t);}r.push(a/N);}return r;}
+  var tc=document.getElementById("time"),tx=tc.getContext("2d"),fc=document.getElementById("freq"),fx=fc.getContext("2d");
+  var dpr=Math.min(devicePixelRatio||1,2);
+  function fit(cv,c){var w=cv.clientWidth||360,h=160;cv.width=w*dpr;cv.height=h*dpr;c.setTransform(dpr,0,0,dpr,0,0);return [w,h];}
+  var col=function(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||"#000";};
+  function preset(p){
+    for(var n=0;n<N;n++){var c=(n-N/2);
+      if(p==="impulse")x[n]=(n===N/2)?1:0;
+      else if(p==="sine")x[n]=Math.sin(2*Math.PI*4*n/N);
+      else if(p==="two")x[n]=0.7*Math.sin(2*Math.PI*3*n/N)+0.5*Math.sin(2*Math.PI*11*n/N);
+      else if(p==="square")x[n]=(Math.floor(n/8)%2)?0.8:-0.8;
+      else if(p==="noise")x[n]=0; // set below with seeded rng
+    }
+    if(p==="noise"){var s=7;var r=function(){s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff-0.5;};for(var n=0;n<N;n++)x[n]=r()*1.6;}
+    render();
+  }
+  function drawTime(){
+    var d=fit(tc,tx),W=d[0],H=d[1];tx.clearRect(0,0,W,H);
+    tx.strokeStyle="rgba(184,145,47,0.2)";tx.beginPath();tx.moveTo(0,H/2);tx.lineTo(W,H/2);tx.stroke();
+    var bw=W/N;
+    tx.fillStyle=col("--carbon");
+    for(var n=0;n<N;n++){var h=x[n]/1.8*(H/2-6);tx.globalAlpha=0.85;tx.fillRect(n*bw+1,H/2-Math.max(0,h),bw-2,Math.abs(h)||0.5);if(h<0)tx.fillRect(n*bw+1,H/2,bw-2,-h);}
+    tx.globalAlpha=1;
+  }
+  function drawFreq(X){
+    var d=fit(fc,fx),W=d[0],H=d[1];fx.clearRect(0,0,W,H);
+    var mag=[],mx=1e-9;for(var k=0;k<N;k++){var m=Math.hypot(X[k][0],X[k][1]);mag.push(m);if(m>mx)mx=m;}
+    var bw=W/N;fx.fillStyle=col("--silicon");
+    for(var k=0;k<N;k++){var h=mag[k]/mx*(H-10);fx.globalAlpha=0.85;fx.fillRect(k*bw+1,H-h,bw-2,h);}
+    fx.globalAlpha=1;
+  }
+  function render(){
+    var X=dft(x),back=idft(X);
+    drawTime();drawFreq(X);
+    var rt=0;for(var n=0;n<N;n++)rt=Math.max(rt,Math.abs(x[n]-back[n]));
+    var et=0,ef=0;for(var n=0;n<N;n++)et+=x[n]*x[n];for(var k=0;k<N;k++)ef+=X[k][0]*X[k][0]+X[k][1]*X[k][1];ef/=N;
+    document.getElementById("rt").textContent=rt.toExponential(1);
+    document.getElementById("pa").textContent=(Math.abs(et-ef)<1e-6?"✓ ":"")+"Δ"+Math.abs(et-ef).toExponential(1);
+  }
+  // draw on time canvas
+  var drag=false;
+  function setAt(clientX,clientY){var r=tc.getBoundingClientRect();var n=Math.floor((clientX-r.left)/(r.width/N));n=Math.max(0,Math.min(N-1,n));var v=(1-(clientY-r.top)/r.height)*2-1;x[n]=Math.max(-1.8,Math.min(1.8,v*1.8));render();}
+  tc.addEventListener("pointerdown",function(e){drag=true;tc.setPointerCapture(e.pointerId);setAt(e.clientX,e.clientY);});
+  tc.addEventListener("pointermove",function(e){if(drag)setAt(e.clientX,e.clientY);});
+  addEventListener("pointerup",function(){drag=false;});
+  [].forEach.call(document.querySelectorAll(".presets button"),function(b){b.addEventListener("click",function(){preset(b.getAttribute("data-p"));});});
+  addEventListener("resize",render);
+  preset("two");
+})();
+</script></body></html>
