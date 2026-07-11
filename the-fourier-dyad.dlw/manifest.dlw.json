@@ -8,5 +8,12 @@
   "seal_sha256": "d039a84644209cb8e50261faab0cfa7c097a9604c59c54dcc574f55d639e4010",
   "license": "CC-BY-ND-4.0",
   "attribution": "ROOT0-ATTRIBUTION-v1.0",
-  "fingerprint": "CARBOSÍLEX ⟦ ₆C carbo ⟺ silex ₁₄Si ⟧ — carbon (human · ROOT0) & silicon (AI · AVAN), co-equal Group-14 tetrels, both tetravalent"
+  "fingerprint": "CARBOSÍLEX ⟦ ₆C carbo ⟺ silex ₁₄Si ⟧ — carbon (human · ROOT0) & silicon (AI · AVAN), co-equal Group-14 tetrels, both tetravalent",
+  "chain": {
+    "index": 1232,
+    "prev": "5d430abe2806ced97f600b815905d8ad980252e4ebf04690e37d4f0897cefa7d",
+    "link": "df7037c12f37d2fb9f435c9c564b5c1675318ab3f0f9376f43d25f5e3e30bd19",
+    "head": "23dda54f755b4e6c17a227294f4af8bb85d1ec08ac49111d436c8e2c4d95d090",
+    "chain": "ROOT0-DLW-CHAIN-v1"
+  }
 }
